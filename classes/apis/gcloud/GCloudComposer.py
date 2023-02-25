@@ -1,6 +1,7 @@
 from classes.abstractions.Composer import Composer
 from classes.abstractions.Parser import Parser
 from classes.abstractions.Validator import Validator
+from classes.exceptions.InvalidConfigError import InvalidConfigError
 from classes.Logger import Logger
 
 
@@ -12,3 +13,8 @@ class GCloudComposer(Composer):
 
     def compose_from_file(self, file_location: str) -> None:
         parsed_file = self.parser.parse(file_location)
+        try:
+            self.validator.validate(parsed_file)
+        except InvalidConfigError as e:
+            raise InvalidConfigError(f"{file_location} is invalid. {e}") from\
+                None
