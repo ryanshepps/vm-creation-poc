@@ -11,4 +11,4 @@ class GCloudComposer(Composer):
         self.logger = Logger(__name__)
 
     def compose_from_file(self, file_location: str) -> None:
-        pass
+        parsed_file = self.parser.parse(file_location)
