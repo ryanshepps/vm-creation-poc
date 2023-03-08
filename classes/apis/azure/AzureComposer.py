@@ -1,3 +1,4 @@
+import datetime
 import getpass
 
 from .classes.Image import Image
@@ -9,6 +10,7 @@ from classes.abstractions.Composer import Composer
 from classes.abstractions.Parser import Parser
 from classes.abstractions.Validator import Validator
 from classes.exceptions.InvalidConfigError import InvalidConfigError
+from classes.VMDocumenter import VMDocumenter
 from classes.Logger import Logger
 
 
@@ -45,3 +47,10 @@ class AzureComposer(Composer):
                 SubscriptionID=subscription_id, ResourceGroup=vm_resouce_group,
                 Network=vm_network.get_network_interface(),
                 VM_Configuration=vm_configuration)
+
+            now = datetime.datetime.now().strftime('%Y-%m-%d-%H%M%S')
+            vm_doc_file_name = f"docs/azure/vm/VMcreation_{now}.txt"
+            vm_config_doc_file_name = f"docs/azure/vm_config/azure_{now}.conf"
+            VMDocumenter().document(
+                vm.result, vm_doc_file_name, file_location,
+                vm_config_doc_file_name)

@@ -1,3 +1,5 @@
+import datetime
+
 from .classes.BootDisk import BootDisk
 from .classes.Instance import Instance
 from .classes.InstanceRequest import InstanceRequest
@@ -6,10 +8,10 @@ from classes.abstractions.Composer import Composer
 from classes.abstractions.Parser import Parser
 from classes.abstractions.Validator import Validator
 from classes.exceptions.InvalidConfigError import InvalidConfigError
+from classes.VMDocumenter import VMDocumenter
 from classes.Logger import Logger
 
 from google.cloud import compute_v1
-import google.api_core.exceptions
 
 
 class GCloudComposer(Composer):
@@ -52,3 +54,10 @@ class GCloudComposer(Composer):
                 zone=instance_configuration["zone"],
                 instance=instance_configuration["name"])
             self.logger.info(f'Live Instance: \n{live_instance}')
+
+            now = datetime.datetime.now().strftime('%Y-%m-%d-%H%M%S')
+            vm_doc_file_name = f"docs/gcloud/vm/VMcreation_{now}.txt"
+            vm_config_doc_file_name = f"docs/gcloud/vm_config/gcp_{now}.conf"
+            VMDocumenter().document(
+                live_instance, vm_doc_file_name, file_location,
+                vm_config_doc_file_name)

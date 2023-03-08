@@ -47,6 +47,6 @@ class VirtualMachine:
                 resource_group_name=ResourceGroup.name,
                 vm_name=VM_Configuration["name"],
                 parameters=azure_vm_configuration)
-        vm_creation_poller.result()
+        self.result = vm_creation_poller.result()
 
         logger.info(f"VM {VM_Configuration['name']} successfully created.")
