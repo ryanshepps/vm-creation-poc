@@ -12,6 +12,7 @@ from classes.VMDocumenter import VMDocumenter
 from classes.Logger import Logger
 
 from google.cloud import compute_v1
+import google.auth
 
 
 class GCloudComposer(Composer):
@@ -19,6 +20,25 @@ class GCloudComposer(Composer):
     def __init__(self, *, Parser: Parser, Validator: Validator) -> None:
         super().__init__(Parser=Parser, Validator=Validator)
         self.logger = Logger(__name__)
+
+    def __get_project_id(self, instance_configuration):
+        project_id = None
+
+        if "project" in instance_configuration:
+            project_id = instance_configuration["project"]
+        else:
+            self.logger.info(
+                f"Project ID for {instance_configuration['name']} does not \
+exist in configuration. Attempting to use project in GCloud CLI configuration.")
+            _, project_id = google.auth.default()
+
+        if project_id is None:
+            raise InvalidConfigError(
+                f"Could not find project ID for \
+{instance_configuration['name']}. Consider setting the project in the \
+instance configuration or set a default project via the GCloud CLI.")
+
+        return project_id
 
     def compose_from_file(self, file_location: str) -> None:
         parsed_file = self.parser.parse(file_location)
@@ -30,6 +50,8 @@ class GCloudComposer(Composer):
                 None
 
         for instance_configuration in parsed_file:
+            instance_configuration["project"] = self.__get_project_id(instance_configuration)
+
             instance_boot_disk = BootDisk(instance_configuration)
             instance_network = Network()
 
