@@ -8,8 +8,16 @@ from azure.mgmt.compute import ComputeManagementClient
 
 class VirtualMachine:
 
+    def __add_tags_to_azure_conf(self, azure_conf: dict, vm_configuration: dict):
+        if "purpose" in vm_configuration:
+            azure_conf["tags"]["purpose"] = vm_configuration["purpose"]
+        if "os" in vm_configuration:
+            azure_conf["tags"]["os"] = vm_configuration["os"]
+        if "team" in vm_configuration:
+            azure_conf["tags"]["team"] = vm_configuration["team"]
+
     def __vm_conf_to_azure_conf(self, network: Network, vm_configuration: dict):
-        return {
+        azure_vm_configuration = {
             "location": vm_configuration["location"],
             "storage_profile": {
                 "image_reference": vm_configuration["image-reference"],
@@ -28,8 +36,13 @@ class VirtualMachine:
                 "computer_name": vm_configuration["name"],
                 "admin_username": vm_configuration["admin-username"],
                 "admin_password": vm_configuration["admin-password"],
-            }
+            },
+            "tags": {},
         }
+
+        self.__add_tags_to_azure_conf(azure_vm_configuration, vm_configuration)
+
+        return azure_vm_configuration
 
     def __init__(
             self, *, SubscriptionID: str, ResourceGroup: ResourceGroup,
