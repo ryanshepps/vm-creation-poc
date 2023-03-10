@@ -35,14 +35,14 @@ class AzureComposer(Composer):
         subscription_id = Subscription().subscription_id
 
         for vm_configuration in parsed_file:
-            vm_configuration["admin-password"] = \
-                self.__request_admin_password(vm_configuration["name"])
             vm_configuration["image-reference"] = Image(vm_configuration)
 
             vm_resouce_group = ResourceGroup(subscription_id, vm_configuration)
             vm_network = Network(
                 SubscriptionID=subscription_id, ResourceGroup=vm_resouce_group,
                 VM_Configuration=vm_configuration)
+            vm_configuration["admin-password"] = \
+                self.__request_admin_password(vm_configuration["name"])
             vm = VirtualMachine(
                 SubscriptionID=subscription_id, ResourceGroup=vm_resouce_group,
                 Network=vm_network.get_network_interface(),
