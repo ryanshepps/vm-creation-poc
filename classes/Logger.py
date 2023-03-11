@@ -43,6 +43,6 @@ class Logger:
 
         logger = logging.getLogger(Name)
         logger.addHandler(stdout_handler)
-        logger.setLevel(logging.DEBUG)
+        logger.setLevel(logging.INFO)
 
         return logger
