@@ -1,4 +1,5 @@
 from ....Logger import Logger
+from .NetworkSecurityGroup import NetworkSecurityGroup
 from .ResourceGroup import ResourceGroup
 
 from azure.identity import AzureCliCredential
@@ -19,6 +20,11 @@ class Subnet:
         subnet_parameters = {
             "address_prefix": "10.0.0.0/24",
         }
+
+        if "ports" in VMConfiguration:
+            subnet_parameters["network_security_group"] = NetworkSecurityGroup(
+                SubscriptionID=SubscriptionID, ResourceGroup=ResourceGroup,
+                VMConfiguration=VMConfiguration)
 
         logger.info(f"Provisioning Subnet for \
 {VMConfiguration['name']}: \n\
