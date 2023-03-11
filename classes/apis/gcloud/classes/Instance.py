@@ -9,11 +9,16 @@ class Instance:
         for key, label in instance_configuration.items():
             formatted_labels[key] = label.replace(" ", "-").lower()
 
-        return {
-            "team": formatted_labels["team"],
-            "purpose": formatted_labels["purpose"],
-            "os": formatted_labels["os"]
-        }
+        labels = {}
+
+        if "team" in formatted_labels["team"]:
+            labels["team"] = formatted_labels["team"]
+        if "purpose" in formatted_labels["purpose"]:
+            labels["purpose"] = formatted_labels["purpose"]
+        if "os" in formatted_labels["os"]:
+            labels["os"] = formatted_labels["os"]
+
+        return labels
 
     def __new__(cls, instance_configuration, disks, networks):
         instance = compute_v1.Instance()
