@@ -40,12 +40,12 @@ class AzureComposer(Composer):
             vm_resouce_group = ResourceGroup(subscription_id, vm_configuration)
             vm_network = Network(
                 SubscriptionID=subscription_id, ResourceGroup=vm_resouce_group,
-                VM_Configuration=vm_configuration)
+                VMConfiguration=vm_configuration)
             vm_configuration["admin-password"] = \
                 self.__request_admin_password(vm_configuration["name"])
             vm = VirtualMachine(
                 SubscriptionID=subscription_id, ResourceGroup=vm_resouce_group,
-                Network=vm_network.get_network_interface(),
+                Network=vm_network,
                 VM_Configuration=vm_configuration)
 
             now = datetime.datetime.now().strftime('%Y-%m-%d-%H%M%S')
