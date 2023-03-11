@@ -1,6 +1,7 @@
 import datetime
 
 from .classes.BootDisk import BootDisk
+from .classes.Firewall import Firewall
 from .classes.Instance import Instance
 from .classes.InstanceRequest import InstanceRequest
 from .classes.Network import Network
@@ -54,6 +55,9 @@ instance configuration or set a default project via the GCloud CLI.")
 
             instance_boot_disk = BootDisk(instance_configuration)
             instance_network = Network()
+            if "ports" in instance_configuration:
+                Firewall(
+                    instance_network, instance_configuration)
 
             instance = Instance(
                 instance_configuration,
