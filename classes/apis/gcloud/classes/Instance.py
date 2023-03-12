@@ -29,7 +29,7 @@ class Instance:
             f'zones/{instance_configuration["zone"]}/machineTypes/f1-micro'
         instance.labels = cls.__create_labels(instance_configuration)
         instance.tags = {
-            "items": ['linuxserver02-firewall']
+            "items": [f'{instance_configuration["name"]}-firewall']
         }
 
         if "description" in instance_configuration:
